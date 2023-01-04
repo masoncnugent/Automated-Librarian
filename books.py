@@ -3,7 +3,7 @@ types = ["philosophical", "comic strip", "adventure", "english curriculum"]
 book_data = [["philosophical", "Beyond Good and Evil", "Fredrich Nietzsche", "1886", "9", "6"],
              ["philosophical", "The Art of War", "Sun Tzu", "5th Century B.C.", "7", "8"],
              ["philosophical", "Republic", "Plato", "375 B.C.", "6", "4"],
-             ["philosophical", "Meditations on First Philosophy", "Rene Descartes", "1641" "5", "4"],
+             ["philosophical", "Meditations on First Philosophy", "Rene Descartes", "1641", "5", "4"],
              ["philosophical", "Critique of Pure Reason", "Immanuel Kant", "1781", "7", "6"],
              ["comic strip", "It's a Magical World", "Bill Watterson", "1996", "10", "10"],
              ["comic strip", "Watchmen", "Alan Moore", "1986", "5", "7"],
