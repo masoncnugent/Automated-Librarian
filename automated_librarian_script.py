@@ -51,10 +51,51 @@ def book_type_prefixes(types):
 
 #returns True if the user chose a letter that is one of the prefixes within the types list
 def prefix_checker(user_letter_choice, prefix_list):
-    if user_letter_choice in prefix_list:
+    if user_letter_choice[0] in prefix_list:
         return True
     return False
 
+#returns a list of the best possible searches given the user_letter_choice
+def match_calculator(user_letter_choice, prefix_list):
+    if not prefix_checker(user_letter_choice, prefix_list):
+        return False
+    
+    possible_type_list = []
+    for type in types:
+        #this is a better-than-nothing heuristic, but more could be done to limit options than this. The better this heuristic, the less expensive every other operation down the line
+        if type[0] == user_letter_choice[0]:
+            possible_type_list.append(type)
+
+    print("\nbelow this is/are the possible type(s)")
+    print(possible_type_list)
+    print("")
+
+    score_list = []
+    for possible_type in possible_type_list:
+        score = 0
+        for i in range(0, len(user_letter_choice)):
+            if user_letter_choice[i] == possible_type[i]:
+                score += 1
+        score_list.append(score)
+
+    print(score_list)
+
+    max_score = 0
+    best_choice_list = []
+    for i in range(0, len(score_list)):
+        if score_list[i] > max_score:
+            #there is likely a one line solution to the two lines below
+            best_choice_list.clear()
+            best_choice_list.append(possible_type_list[i])
+            max_score = score_list[i]
+
+        elif score_list[i] == max_score:
+            best_choice_list.append(possible_type_list[i])
+
+    print("below this is/are the best search choice(s)")
+    return best_choice_list
+
+    
 #calls the helper functions and contains the core logic for when those various functions are called
 def main_loop():
     book_data_list = insert_book_data()
@@ -65,8 +106,20 @@ def main_loop():
     while user_reset_choice == "y":
         if run_state == 0:
             user_letter_choice = input("What type of books would you like to read?\nType the first letters of your choosing, with your options being {0}\n".format(book_type_oxford(types)))
+            #this is a temporary test of match_calculator
+            print("below this is the moment of truth...")
+            print(match_calculator(user_letter_choice, book_type_prefixes(types)))
+
+            """
             if prefix_checker(user_letter_choice, book_type_prefixes(types)):
                 genre_printer(book_data_list, user_letter_choice)
+            """
+
+            #the if statement below this is nonsense that shouldn't be included, it's merely there to prevent syntax errors
+            if True:
+                break
+            #get rid of what's between this and the previous comment.
+
             else:
                 while not prefix_checker(user_letter_choice, book_type_prefixes(types)):
                     user_letter_choice = input("\nI'm sorry, it appears you've made a incorrect entry.\nType the first letters of your choosing, with your options being {0}\n".format(book_type_oxford(types)))
