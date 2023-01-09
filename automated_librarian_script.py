@@ -16,13 +16,21 @@ def insert_book_data():
     return book_data_list
 
 
+def linked_list_maker(list):
+    linked_list = LinkedList()
+    for item in list:
+        linked_list.insert_beginning(item)
+    
+    return linked_list
+
+
 #this determines what genre the user has chosen and prints all its books to the console
-def genre_printer(book_data_list, user_letter_choice):
-    current_list = book_data_list.get_head_node()
+def genre_printer(match, book_list):
+    current_list = book_list.get_head_node()
     while current_list.get_value():
-        current_genre = current_list.get_value().get_head_node().get_value()[0]
+        current_genre = current_list.get_value().get_head_node().get_value()#[0]
         #eventually include a possibility checker where the user can make a multi-character string and all of that will be compared against the first letters of the categories. The one with the most consecutive matches is your choice, and if multiple matches exist they are presented to the user as a choice.
-        if user_letter_choice == current_genre[0]:
+        if match == current_genre:
             print("\nHere is a list of " + current_genre + " books:")
             print(current_list.get_value().stringify_list())
             break
@@ -55,16 +63,35 @@ def prefix_checker(user_letter_choice, prefix_list):
         return True
     return False
 
+def questions(id, types=types):
+    if id == 1:
+        question = input("What type of books would you like to read?\nType the first letters of your choosing, with your options being {0}\n".format(book_type_oxford(types)))
+    elif id == 2:
+        question = input("\nWhat other type of books would you like to read?\nType the first letters of your choosing, with your options being {0}\n".format(book_type_oxford(types)))
+    elif id == 3:
+        question = input("\nI\'m sorry, it appears you've made a incorrect entry.\nWhat type of books would you like to read?\nType the first letters of your choosing, with your options being {0}\n".format(book_type_oxford(types)))
+    elif id == 4:
+        question = input("\nI\'m sorry, it appears you've made a incorrect entry.\nWhat other type of books would you like to read?\nType the first letters of your choosing, with your options being {0}\n".format(book_type_oxford(types)))
+    elif id == 5:
+        question = input("Would you like to search for more books? Type \'y\' for yes or \'n\' for no.\n")
+    elif id == 6:
+        question = input("I\'m sorry, it appears you've made an incorrect entry.\n If you'd like to search for more books type \'y\', but if not type \'n\'.")
+    elif id == 7:
+        question = input("\nThe types that match that search are {0}\nType the first letters of your choosing to narrow down this list.\n".format(book_type_oxford(types)))
+
+    return question
+
 #returns a list of the best possible searches given the user_letter_choice
-def match_calculator(user_letter_choice, prefix_list):
-    if not prefix_checker(user_letter_choice, prefix_list):
-        return False
+def match_calculator(user_letter_choice, types=types):
     
     possible_type_list = []
     for type in types:
-        #this is a better-than-nothing heuristic, but more could be done to limit options than this. The better this heuristic, the less expensive every other operation down the line
+        #this is a better-than-nothing heuristic, but more could be done to limit options than this. The better this heuristic, the less expensive every other operation down the line is. If the dataset were massive, I would prioritize optimizing this
         if type[0] == user_letter_choice[0]:
             possible_type_list.append(type)
+    
+    if len(possible_type_list) == 0:
+        return False
 
     print("\nbelow this is/are the possible type(s)")
     print(possible_type_list)
@@ -78,7 +105,9 @@ def match_calculator(user_letter_choice, prefix_list):
                 score += 1
         score_list.append(score)
 
+    print("below this is the score_list")
     print(score_list)
+    print("")
 
     max_score = 0
     best_choice_list = []
@@ -93,7 +122,40 @@ def match_calculator(user_letter_choice, prefix_list):
             best_choice_list.append(possible_type_list[i])
 
     print("below this is/are the best search choice(s)")
-    return best_choice_list
+    print(best_choice_list)
+
+    return decision_maker(best_choice_list)
+
+
+def decision_maker(best_choice_list):
+    if len(best_choice_list) == 1:
+        print("hello!! Is this on??")
+        #best_choice_linked_list = LinkedList()
+        #best_choice_linked_list.insert_beginning(best_choice_list)
+        book_data_list = insert_book_data()
+        current_list = book_data_list.get_head_node()
+        while current_list.get_value():
+            current_genre = current_list.get_value().get_head_node().get_value()
+            print("below this is current_genre")
+            print(current_genre)
+            if best_choice_list[0] == current_genre:
+                print("\nHere is a list of " + current_genre + " books:")
+                print(current_list.get_value().stringify_list())
+                """
+                best_choice_linked_list = LinkedList()
+                while current_list.get_head_node():
+                    best_choice_linked_list.insert_beginning(current_list.get_head_node())
+                    current_list.get_head_node() = current_list.get_head_node().get_next_node()
+                break
+                """
+            else:
+                current_list = current_list.get_next_node()
+        print("before this should be something...")
+        print(best_choice_linked_list.stringify_list())
+        return best_choice_linked_list
+    else:
+        decision = questions(7, best_choice_list)
+        return match_calculator(decision, best_choice_list)
 
     
 #calls the helper functions and contains the core logic for when those various functions are called
@@ -102,18 +164,13 @@ def main_loop():
 
     run_state = 0
     user_reset_choice = "y"
-    user_reset_choice_question = "Would you like to search for more books? Type \'y\' for yes or \'n\' for no.\n"
+
     while user_reset_choice == "y":
         if run_state == 0:
-            user_letter_choice = input("What type of books would you like to read?\nType the first letters of your choosing, with your options being {0}\n".format(book_type_oxford(types)))
+            user_letter_choice = questions(1)
             #this is a temporary test of match_calculator
-            print("below this is the moment of truth...")
-            print(match_calculator(user_letter_choice, book_type_prefixes(types)))
-
-            """
-            if prefix_checker(user_letter_choice, book_type_prefixes(types)):
-                genre_printer(book_data_list, user_letter_choice)
-            """
+            match = match_calculator(user_letter_choice)
+            genre_printer(book_data_list, match)
 
             #the if statement below this is nonsense that shouldn't be included, it's merely there to prevent syntax errors
             if True:
