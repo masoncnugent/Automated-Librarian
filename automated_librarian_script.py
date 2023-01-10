@@ -25,17 +25,27 @@ def linked_list_maker(list):
 
 
 #this determines what genre the user has chosen and prints all its books to the console
-def genre_printer(match, book_list):
-    current_list = book_list.get_head_node()
+def genre_printer(book_data_list, match):
+    current_list = book_data_list.get_head_node()
     while current_list.get_value():
-        current_genre = current_list.get_value().get_head_node().get_value()#[0]
+        current_genre = current_list.get_value().get_head_node().get_value()[0]
         #eventually include a possibility checker where the user can make a multi-character string and all of that will be compared against the first letters of the categories. The one with the most consecutive matches is your choice, and if multiple matches exist they are presented to the user as a choice.
+        #if match == current_genre:
         if match == current_genre:
+        #what's above breaks too! Current_genre is seen as a NoneType, even though it can exist if it's just printed..
+            print(match)
+            print(current_genre)
             print("\nHere is a list of " + current_genre + " books:")
             print(current_list.get_value().stringify_list())
             break
         else:
+            print("holla")
+            print(match)
+            print(current_genre)
             current_list = current_list.get_next_node()
+            print("playa")
+
+#IF YOU EVER GET NONETYPE CONSIDER THAT YOU MIGHT HAVE MORE TYPES THAN BOOK_DATA TYPES
 
 
 #creates a sentence of the book types with an oxford comma at the end
@@ -109,6 +119,9 @@ def match_calculator(user_letter_choice, types=types):
     print(score_list)
     print("")
 
+
+    #make a condition where if the possible_type list is 1, the code below is skipped
+
     max_score = 0
     best_choice_list = []
     for i in range(0, len(score_list)):
@@ -130,29 +143,9 @@ def match_calculator(user_letter_choice, types=types):
 def decision_maker(best_choice_list):
     if len(best_choice_list) == 1:
         print("hello!! Is this on??")
-        #best_choice_linked_list = LinkedList()
-        #best_choice_linked_list.insert_beginning(best_choice_list)
-        book_data_list = insert_book_data()
-        current_list = book_data_list.get_head_node()
-        while current_list.get_value():
-            current_genre = current_list.get_value().get_head_node().get_value()
-            print("below this is current_genre")
-            print(current_genre)
-            if best_choice_list[0] == current_genre:
-                print("\nHere is a list of " + current_genre + " books:")
-                print(current_list.get_value().stringify_list())
-                """
-                best_choice_linked_list = LinkedList()
-                while current_list.get_head_node():
-                    best_choice_linked_list.insert_beginning(current_list.get_head_node())
-                    current_list.get_head_node() = current_list.get_head_node().get_next_node()
-                break
-                """
-            else:
-                current_list = current_list.get_next_node()
-        print("before this should be something...")
-        print(best_choice_linked_list.stringify_list())
-        return best_choice_linked_list
+        book_data_list2 = insert_book_data()
+        #for some reason before I wanted to turn best_choice_list into a linked_list before...
+        return best_choice_list[0]
     else:
         decision = questions(7, best_choice_list)
         return match_calculator(decision, best_choice_list)
@@ -161,6 +154,7 @@ def decision_maker(best_choice_list):
 #calls the helper functions and contains the core logic for when those various functions are called
 def main_loop():
     book_data_list = insert_book_data()
+    genre_printer(book_data_list, "philosophical")
 
     run_state = 0
     user_reset_choice = "y"
@@ -170,7 +164,9 @@ def main_loop():
             user_letter_choice = questions(1)
             #this is a temporary test of match_calculator
             match = match_calculator(user_letter_choice)
+            print("so uhhhhhhh")
             genre_printer(book_data_list, match)
+            print("moving on to the next part!!!")
 
             #the if statement below this is nonsense that shouldn't be included, it's merely there to prevent syntax errors
             if True:

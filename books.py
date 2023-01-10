@@ -1,4 +1,4 @@
-types = ["philosophical", "comic strip", "adventure", "english curriculum", "philabolical", "philagoguery", "philarity", "phylo_dough", "philamemnon", "philler_episode", "phinally_my_program_works:)"]
+types = ["philosophical", "comic strip", "adventure", "english curriculum"]
 
 book_data = [["philosophical", "Beyond Good and Evil", "Fredrich Nietzsche", "1886", "9", "6"],
              ["philosophical", "The Art of War", "Sun Tzu", "5th Century B.C.", "7", "8"],
