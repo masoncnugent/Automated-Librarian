@@ -1,4 +1,4 @@
-types = ["philosophical", "comic strip", "adventure", "english curriculum"]
+types = ["philosophical", "comic strip", "adventure", "english curriculum", "phillistine"]
 
 book_data = [["philosophical", "Beyond Good and Evil", "Fredrich Nietzsche", "1886", "9", "6"],
              ["philosophical", "The Art of War", "Sun Tzu", "5th Century B.C.", "7", "8"],
@@ -10,7 +10,8 @@ book_data = [["philosophical", "Beyond Good and Evil", "Fredrich Nietzsche", "18
              ["adventure", "Moby-Dick", "Herman Melville", "1851", "4", "7"],
              ["adventure", "The Call of the Wild", "Jack London", "1903", "4", "5"],
              ["adventure", "Hatchet", "Gary Paulsen", "4", "5"],
-             ["english curriculum", "Frankenstein", "Mary Shelley", "1818", "7", "8"]
+             ["english curriculum", "Frankenstein", "Mary Shelley", "1818", "7", "8"],
+             ["phillistine", "Merely", "A", "Test", "10", "10"]
 
 #You can finish this up later
 

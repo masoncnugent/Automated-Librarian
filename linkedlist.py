@@ -3,7 +3,10 @@ from node import Node
 class LinkedList:
     def __init__(self, value=None):
         self.head_node = Node(value)
+        self.true_head = None
     
+    #this true_head stuff might be totally unneeded if the creation of current_list makes it so that book_data_list doesn't have its head node altered.
+
     def get_head_node(self):
         return self.head_node
 
@@ -11,6 +14,7 @@ class LinkedList:
         new_node = Node(new_value)
         new_node.set_next_node(self.get_head_node())
         self.head_node = new_node
+        self.true_head = new_node
 
     def stringify_list(self):
         string_list = ""
@@ -24,6 +28,7 @@ class LinkedList:
         current_node = self.head_node
         if current_node.get_value() == value_to_remove:
             self.head_node = current_node.get_next_node()
+            self.true_head = current_node.get_next_node()
         else:
             while current_node:
                 next_node = current_node.get_next_node()
