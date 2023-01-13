@@ -15,28 +15,37 @@ def insert_book_data():
 
     return book_data_list
 
-
-#this determines what genre the user has chosen and prints all its books to the console
-def genre_printer(book_data_list, match):
+#prints out the details of every book that matches the type of book the user has searched for
+def book_details(book_data_list, match):
     current_list = book_data_list.get_head_node()
     while current_list.get_value():
-        current_genre = current_list.get_value().get_head_node().get_value()[0]
-        if match == current_genre:
-            print("\nHere is a list of " + current_genre + " books:")
-            print(current_list.get_value().stringify_list())
-            break
+        current_book = current_list.get_value().get_head_node()
+        if match == current_book.get_value()[0]:
+            while current_book.get_value():
+                print("================================")
+                print("Title: " + current_book.get_value()[1]) 
+                print("Author: " + current_book.get_value()[2])
+                print("Year Written: " + current_book.get_value()[3])
+                print("Critic Review: " + current_book.get_value()[4])
+                print("User Review: " + current_book.get_value()[5])
+                print("================================")
+                print("")
+                current_book = current_book.get_next_node()
+            current_list = current_list.get_next_node()
         else:
             current_list = current_list.get_next_node()
-
-#IF YOU EVER GET NONETYPE CONSIDER THAT YOU MIGHT HAVE MORE TYPES THAN BOOK_DATA TYPES
 
 
 #creates a sentence of the book types with an oxford comma at the end
 def book_type_oxford(types):
     oxford_sentence = ""
     pointer = 0
-    while pointer != len(types) - 1:
-        oxford_sentence += types[pointer] + ", "
+    if len(types) > 2:
+        while pointer != len(types) - 1:
+            oxford_sentence += types[pointer] + ", "
+            pointer += 1
+    elif len(types) == 2:
+        oxford_sentence += types[pointer] + " "
         pointer += 1
     oxford_sentence += "and " + types[pointer] + "."
     return oxford_sentence
@@ -61,13 +70,13 @@ def questions(id, types=types):
 
     return question
 
+
 #checks if the users search is in the only remaining book type fom the start of the search segment up until the type word
 def search_checker(segment, word):
     for pointer in range(len(segment)):
         if segment[pointer] != word[pointer]:
             print(segment + " not in " + word + " from beginning of word up until end of segment")
             return False
-    print("segment in word!")
     return True
 
 
@@ -107,9 +116,6 @@ def match_calculator(user_choice, types=types):
     print(score_list)
     print("")
 
-
-    #make a condition where if the possible_type list is 1, the code below is skipped
-
     max_score = 0
     best_choice_list = []
     for i in range(0, len(score_list)):
@@ -127,7 +133,7 @@ def match_calculator(user_choice, types=types):
 
     return decision_maker(best_choice_list)
 
-
+#recursively calls match_calculator until the best_choice_list has a length of 1, taking input from the user to narrow this list
 def decision_maker(best_choice_list):
     if len(best_choice_list) == 1:
         return best_choice_list[0]
@@ -146,12 +152,11 @@ def main_loop():
     while user_reset_choice == "y":
         if run_state == 0:
             user_choice = questions(1)
-            #this is a temporary test of match_calculator
             match = match_calculator(user_choice)
             while match == False:
                 user_choice = questions(3)
                 match = match_calculator(user_choice)
-            genre_printer(book_data_list, match)
+            book_details(book_data_list, match)
 
             user_reset_choice = questions(5)
             while user_reset_choice != "y" and user_reset_choice != "n":
@@ -167,7 +172,7 @@ def main_loop():
             while match == False:
                 user_choice = questions(4)
                 match = match_calculator(user_choice)
-            genre_printer(book_data_list, match)
+            book_details(book_data_list, match)
 
             user_reset_choice = questions(5)
             while user_reset_choice != "y" and user_reset_choice != "n":
