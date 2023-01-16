@@ -9,7 +9,7 @@ book_data = [["philosophical", "Beyond Good and Evil", "Fredrich Nietzsche", "18
              ["comic strip", "Watchmen", "Alan Moore", "1986", "5", "7"],
              ["adventure", "Moby-Dick", "Herman Melville", "1851", "4", "7"],
              ["adventure", "The Call of the Wild", "Jack London", "1903", "4", "5"],
-             ["adventure", "Hatchet", "Gary Paulsen", "4", "5"],
+             ["adventure", "Hatchet", "Gary Paulsen", "1986", "4", "5"],
              ["english curriculum", "Frankenstein", "Mary Shelley", "1818", "7", "8"],
              ["phillistine", "Merely", "A", "Test", "10", "10"]
 

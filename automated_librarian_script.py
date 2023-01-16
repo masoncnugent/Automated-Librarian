@@ -2,6 +2,8 @@ from books import *
 from welcome import *
 from linkedlist import LinkedList
 
+#print_welcome()
+dragon_printer(dragon_1, dragon_2, dragon_3)
 
 #creates the linkedlist of linkedlists with book types as the sublists
 def insert_book_data():
@@ -21,6 +23,7 @@ def book_details(book_data_list, match):
     while current_list.get_value():
         current_book = current_list.get_value().get_head_node()
         if match == current_book.get_value()[0]:
+            print("\nDisplaying books from the category " + match + ".\n")
             while current_book.get_value():
                 print("================================")
                 print("Title: " + current_book.get_value()[1]) 
@@ -64,18 +67,17 @@ def questions(id, types=types):
     elif id == 5:
         question = input("Would you like to search for more books? Type \'y\' for yes or \'n\' for no.\n")
     elif id == 6:
-        question = input("I\'m sorry, it appears you've made an incorrect entry.\n If you'd like to search for more books type \'y\', but if not type \'n\'.")
+        question = input("\nI\'m sorry, it appears you've made an incorrect entry.\n If you'd like to search for more books type \'y\', but if not type \'n\'.")
     elif id == 7:
-        question = input("\nThe types that match that search are {0}\nType the first letters of your choosing to narrow down this list.\n".format(book_type_oxford(types)))
+        question = input("\nThe types that match that search are {0}\nType enough letters to narrow down this list.\n".format(book_type_oxford(types)))
 
     return question
 
 
-#checks if the users search is in the only remaining book type fom the start of the search segment up until the type word
-def search_checker(segment, word):
+#checks if the users segment is in the book_type from the zeroth index of segment up until the end of it
+def search_checker(segment, book_type):
     for pointer in range(len(segment)):
-        if segment[pointer] != word[pointer]:
-            print(segment + " not in " + word + " from beginning of word up until end of segment")
+        if segment[pointer] != book_type[pointer]:
             return False
     return True
 
@@ -88,20 +90,18 @@ def match_calculator(user_choice, types=types):
         if type[0] == user_choice[0]:
             possible_type_list.append(type)
     
-    #hmm how to remove entries that start off matching but deviate later, while avoiding entries that match halfway through but not at the beginning... with protections for segments longer than words
+    #removes any entries shorter in length than the user_choice, so index errors don't occur
+    for possible_type in possible_type_list.copy():
+        if len(possible_type) < len(user_choice):
+            possible_type_list.remove(possible_type)
 
     if len(possible_type_list) == 0:
         return False
     elif len(possible_type_list) == 1:
-        #an effort at the simpler checking system, which would solve the problem of the above comment
         if search_checker(user_choice, possible_type_list[0]):
             return possible_type_list[0]
         else:
             return False
-
-    print("\nbelow this is/are the possible type(s)")
-    print(possible_type_list)
-    print("")
 
     score_list = []
     for possible_type in possible_type_list:
@@ -111,10 +111,6 @@ def match_calculator(user_choice, types=types):
                 score += 1
             #what would happen if the user_choice was longer than possible_type, or had a break in it's characters which matched, either of which should disqualify it from consideration?
         score_list.append(score)
-
-    print("below this is the score_list")
-    print(score_list)
-    print("")
 
     max_score = 0
     best_choice_list = []
@@ -127,9 +123,6 @@ def match_calculator(user_choice, types=types):
 
         elif score_list[i] == max_score:
             best_choice_list.append(possible_type_list[i])
-
-    print("below this is/are the best search choice(s)")
-    print(best_choice_list)
 
     return decision_maker(best_choice_list)
 
@@ -196,4 +189,4 @@ finish print_welcome, of course.
 fill out book_data
 """
 
-run_program()
+#run_program()
