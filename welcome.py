@@ -1,32 +1,24 @@
-def print_welcome():
-    print("use this later!")
-
 def dragon_metadata_maker(dragon):
-    dragon_data = []
-    dragon_line_list = dragon.splitlines()
-    for line in dragon_line_list:
-        dragon_data.append(len(line))
+    dragon_data = dragon.splitlines()
+    temp_line_length_list = []
+    for line in dragon_data:
+        temp_line_length_list.append(len(line))
     #the line below this gets rid of the newline that exists at the start of each dragon because of where the """ marks start
     dragon_data.pop(0)
-    dragon_x = max(dragon_data)
-    dragon_y = len(dragon_data)
+    print("does dragon_data have issues here?")
+    print(dragon_data)
+    dragon_x = max(temp_line_length_list)
+    dragon_y = len(temp_line_length_list)
     return dragon_data, dragon_x, dragon_y
 
+#prints the dragons to the screen. Hard-coded to work with 3 dragons, but it dynamically sorts them by size to be displayed in order of 2, 1, 3, a winner's podium
 def dragon_printer(dragon_1, dragon_2, dragon_3):
+    dragon_1 = dragon_1
+    dragon_2 = dragon_2
+    dragon_3 = dragon_3
     dragon_1_metadata = dragon_metadata_maker(dragon_1)
     dragon_2_metadata = dragon_metadata_maker(dragon_2)
     dragon_3_metadata = dragon_metadata_maker(dragon_3)
-    print(dragon_1_metadata)
-    print(dragon_2_metadata)
-    print(dragon_3_metadata)
-
-    possible_max_x_list = []
-    possible_max_x_list.append(dragon_1_metadata[1])
-    possible_max_x_list.append(dragon_2_metadata[1])
-    possible_max_x_list.append(dragon_3_metadata[1])
-    max_x = max(possible_max_x_list)
-    print("this is the largest x value")
-    print(max_x)
 
     possible_max_y_list = []
     possible_max_y_list.append(dragon_1_metadata[2])
@@ -34,11 +26,6 @@ def dragon_printer(dragon_1, dragon_2, dragon_3):
     possible_max_y_list.append(dragon_3_metadata[2])
 
     max_y = max(possible_max_y_list)
-    print("this is the largest y value")
-    print(max_y)
-
-    print("\nbelow this is an unorganized list of all the numbers of lines in each dragon, from 1 to 2 to 3")
-    print(possible_max_y_list)
 
     #this creates the order list through an analysis of the possible_max_y_list. The goal is to arrange the dragons like a winners podium, with the y-values determining the placement
     order_list = []
@@ -50,68 +37,84 @@ def dragon_printer(dragon_1, dragon_2, dragon_3):
         else:
             order_list.insert(0, max(possible_max_y_list))
             possible_max_y_list.remove(max(possible_max_y_list))
-    print("below this is an ordered list of all the numbers of lines in each dragon, arranged like a winners podium")
-    print(order_list)
-    while order_list:
-        if order_list[0] == dragon_1_metadata[2]:
-            print("\nprinting dragon 1!")
-            order_list.pop(0)
-        elif order_list[0] == dragon_2_metadata[2]:
-            print("\nprinting dragon 2!")
-            order_list.pop(0)
-        elif order_list[0] == dragon_3_metadata[2]:
-            print("\nprinting dragon 3!")
 
-            dragon_1_line_list = dragon_1.splitlines()
-            dragon_2_line_list = dragon_2.splitlines()
-            dragon_3_line_list = dragon_3.splitlines()
+    id = 1
+    for entry in order_list:
+        if id == 1:
+            if dragon_1_metadata[2] == entry:
+                first_dragon_line_list = dragon_1_metadata[0]
+                first_dragon_metadata = dragon_1_metadata
+            elif dragon_2_metadata[2] == entry:
+                first_dragon_line_list = dragon_2_metadata[0]
+                first_dragon_metadata = dragon_2_metadata
+            elif dragon_3_metadata[2] == entry:
+                first_dragon_line_list = dragon_3_metadata[0]
+                first_dragon_metadata = dragon_3_metadata
+            id += 1
+        elif id == 2:
+            if dragon_1_metadata[2] == entry:
+                second_dragon_line_list = dragon_1_metadata[0]
+                second_dragon_metadata = dragon_1_metadata
+            elif dragon_2_metadata[2] == entry:
+                second_dragon_line_list = dragon_2_metadata[0]
+                second_dragon_metadata = dragon_2_metadata
+            elif dragon_3_metadata[2] == entry:
+                second_dragon_line_list = dragon_3_metadata[0]
+                second_dragon_metadata = dragon_3_metadata
+            id += 1
+        elif id == 3:
+            if dragon_1_metadata[2] == entry:
+                third_dragon_line_list = dragon_1_metadata[0]
+                third_dragon_metadata = dragon_1_metadata
+            elif dragon_2_metadata[2] == entry:              
+                third_dragon_line_list = dragon_2_metadata[0]
+                third_dragon_metadata = dragon_2_metadata
+            elif dragon_3_metadata[2] == entry:
+                third_dragon_line_list = dragon_3_metadata[0]
+                third_dragon_metadata = dragon_3_metadata
 
-            print("starting sequence")
-            total_line = ""
-            #changed this from dragon_1_metadata[2] to dragon_2_metadata[2], since it is the longest of the dragons
-            for i in range(0, max_y):
-                total_line = ""
-                #the rest of this is designed to create a total_line that contains pieces of each dragon in order of middle size, largest, and then smallest, like a winners podium.
-                #if a dragon is not long enough to give any more lines to total_lines, then the else block of each region adds blank text in its place. This is currently hard-coded,
-                #but a dynamic solution that actually determines the orders of the dragons is in the works. As of now, order list is vestigial. Printing dragon 3!!! was printed because
-                #the initial idea was to do it, then dragon_2, then dragon_1, but this fails to recognize how a line from each dragon is needed for total_line. Because of line_lists
-                #for each dragon the 0th index of each dragon_metadata is not used, sadly.
-                if i < len(dragon_1_line_list) - 1:
-                    total_line += dragon_1_line_list[i]
-                    if len(dragon_1_line_list[i]) < dragon_1_metadata[1]:
-                        for remainder in range(0, dragon_1_metadata[1] - len(dragon_1_line_list[i])):
-                            total_line += " "
-                else:
-                    for remainder in range(0, dragon_1_metadata[1]):
-                        total_line += " "
-                if i < len(dragon_2_line_list) - 1:
-                    total_line += dragon_2_line_list[i]
-                    if len(dragon_2_line_list[i]) < dragon_2_metadata[1]:
-                        for remainder in range(0, dragon_2_metadata[1] - len(dragon_2_line_list[i])):
-                            total_line += " "
-                else:
-                    for remainder in range(0, dragon_2_metadata[1]):
-                        total_line += " "
+    total_line = ""
 
-                if i < len(dragon_3_line_list) - 1:
-                    total_line += dragon_3_line_list[i]
-                    if len(dragon_3_line_list[i]) < dragon_3_metadata[1]:
-                        for remainder in range(0, dragon_3_metadata[1] - len(dragon_3_line_list[i])):
-                            total_line += " "
-                else:
-                    for remainder in range(0, dragon_3_metadata[1]):
-                        total_line += " "
-                print(total_line)
+    for i in range(0, max_y):
+        total_line = ""
 
-            print("ending sequence")
-                
-            #the remaining questions... do we need dragon_metadata[0] anymore, and can we make the dragon printing order dynamic?
-            
-            break
+        offset = ((max_y - first_dragon_metadata[2]) // 2)
+        if offset < i < len(first_dragon_line_list) + offset - 1:
+            total_line += first_dragon_line_list[i - offset]
+            if len(first_dragon_line_list[i - offset]) < first_dragon_metadata[1]:
+                for remainder in range(0, first_dragon_metadata[1] - len(first_dragon_line_list[i - offset])):
+                    total_line += " "
+        else:
+            for remainder in range(0, first_dragon_metadata[1]):
+                total_line += " "
+        
+        offset = ((max_y - second_dragon_metadata[2]) // 2)
+        if offset < i < len(second_dragon_line_list) + offset - 1:
+            total_line += second_dragon_line_list[i - offset]
+            if len(second_dragon_line_list[i - offset]) < second_dragon_metadata[1]:
+                for remainder in range(0, second_dragon_metadata[1] - len(second_dragon_line_list[i - offset])):
+                    total_line += " "
+        else:
+            for remainder in range(0, second_dragon_metadata[1]):
+                total_line += " "
+
+        offset = ((max_y - third_dragon_metadata[2]) // 2)
+        if offset < i < len(third_dragon_line_list) + offset - 1:
+            total_line += third_dragon_line_list[i - offset]
+            if len(third_dragon_line_list[i - offset]) < third_dragon_metadata[1]:
+                for remainder in range(0, third_dragon_metadata[1] - len(third_dragon_line_list[i - offset])):
+                    total_line += " "
+        else:
+            for remainder in range(0, third_dragon_metadata[1]):
+                total_line += " "
+        print(total_line)
+
+    print("\n                                                                               =====================================")
+    print("                                                                               Welcome To The Automated Librarian!!!")
+    print("                                                                               =====================================")
 
 
-
-dragon_1 = """
+dragon_goofy = """
                                              __----~~~~~~~~~~~------___
                                   .  .   ~~//====......          __--~ ~~
                   -.            \_|//     |||\  ~~~~~~::::... /~
@@ -131,8 +134,8 @@ dragon_1 = """
                               //.-~~~-~_--~- |-------~~~~~~~~
                                      //.-~~~--\\
 """
-#uhh do we need to do \\ every time???
-dragon_2 = """
+
+dragon_scary = """
           /                            )
           (                             |\\
          /|                              \\
@@ -172,7 +175,7 @@ dragon_2 = """
                                '.__)
 """
 
-dragon_3 = """ 
+dragon_aloofy = """ 
           _.-'.-'-.__
        .-'.       '-.'-._ __.--._
 -..'\,-,/..-  _         .'   \   '----._
@@ -203,5 +206,3 @@ dragon_3 = """
                           \_,     '._ '-.___
                                       '-' -.\\
 """
-
-dragon_printer(dragon_1, dragon_2, dragon_3)

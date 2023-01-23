@@ -2,9 +2,6 @@ from books import *
 from welcome import *
 from linkedlist import LinkedList
 
-#print_welcome()
-dragon_printer(dragon_1, dragon_2, dragon_3)
-
 #creates the linkedlist of linkedlists with book types as the sublists
 def insert_book_data():
     book_data_list = LinkedList()
@@ -17,6 +14,29 @@ def insert_book_data():
 
     return book_data_list
 
+def bar_maker(current_book):
+    bar_length = 0
+    for i in range(1, 6):
+
+        if i == 1:
+            extra = len("Title: ")
+        elif i == 2:
+            extra = len("Author: ")
+        elif i == 3:
+            extra = len("Year Written: ")
+        elif i == 4:
+            extra = len("Critic Review: ")
+        elif i == 5:
+            extra = len("User Review")
+
+        if len(current_book.get_value()[i]) + extra > bar_length:
+            bar_length = len(current_book.get_value()[i]) + extra
+        
+    bar = ""
+    for bar_addition in range(0, bar_length):
+        bar += "="
+    return bar
+
 #prints out the details of every book that matches the type of book the user has searched for
 def book_details(book_data_list, match):
     current_list = book_data_list.get_head_node()
@@ -25,13 +45,15 @@ def book_details(book_data_list, match):
         if match == current_book.get_value()[0]:
             print("\nDisplaying books from the category " + match + ".\n")
             while current_book.get_value():
-                print("================================")
+                bar = bar_maker(current_book)
+
+                print(bar)
                 print("Title: " + current_book.get_value()[1]) 
                 print("Author: " + current_book.get_value()[2])
                 print("Year Written: " + current_book.get_value()[3])
                 print("Critic Review: " + current_book.get_value()[4])
                 print("User Review: " + current_book.get_value()[5])
-                print("================================")
+                print(bar)
                 print("")
                 current_book = current_book.get_next_node()
             current_list = current_list.get_next_node()
@@ -67,14 +89,14 @@ def questions(id, types=types):
     elif id == 5:
         question = input("Would you like to search for more books? Type \'y\' for yes or \'n\' for no.\n")
     elif id == 6:
-        question = input("\nI\'m sorry, it appears you've made an incorrect entry.\n If you'd like to search for more books type \'y\', but if not type \'n\'.")
+        question = input("\nI\'m sorry, it appears you've made an incorrect entry.\nIf you'd like to search for more books type \'y\', but if not type \'n\'.\n")
     elif id == 7:
         question = input("\nThe types that match that search are {0}\nType enough letters to narrow down this list.\n".format(book_type_oxford(types)))
 
     return question
 
 
-#checks if the users segment is in the book_type from the zeroth index of segment up until the end of it
+#checks if the users segment is in the book_type from the zeroth index of segment up until its last index
 def search_checker(segment, book_type):
     for pointer in range(len(segment)):
         if segment[pointer] != book_type[pointer]:
@@ -90,103 +112,73 @@ def match_calculator(user_choice, types=types):
         if type[0] == user_choice[0]:
             possible_type_list.append(type)
     
-    #removes any entries shorter in length than the user_choice, so index errors don't occur
+    #removes any entries shorter in length than the user_choice, so index errors with search_checker() don't occur
     for possible_type in possible_type_list.copy():
         if len(possible_type) < len(user_choice):
             possible_type_list.remove(possible_type)
 
     if len(possible_type_list) == 0:
         return False
-    elif len(possible_type_list) == 1:
-        if search_checker(user_choice, possible_type_list[0]):
-            return possible_type_list[0]
-        else:
-            return False
 
-    score_list = []
-    for possible_type in possible_type_list:
-        score = 0
-        for i in range(0, len(user_choice)):
-            if user_choice[i] == possible_type[i]:
-                score += 1
-            #what would happen if the user_choice was longer than possible_type, or had a break in it's characters which matched, either of which should disqualify it from consideration?
-        score_list.append(score)
+#before comparing best searches there has to be at least one possible match. This also removes non-matches from possible_type_list
+    no_match = True
+    for possible_type in possible_type_list.copy():
+        if search_checker(user_choice, possible_type):
+           no_match = False
+        elif not search_checker(user_choice, possible_type):
+           possible_type_list.remove(possible_type)
+    
+    if no_match:
+        return False
 
-    max_score = 0
-    best_choice_list = []
-    for i in range(0, len(score_list)):
-        if score_list[i] > max_score:
-            #there is likely a one line solution to the two lines below
-            best_choice_list.clear()
-            best_choice_list.append(possible_type_list[i])
-            max_score = score_list[i]
+    return decision_maker(possible_type_list)
 
-        elif score_list[i] == max_score:
-            best_choice_list.append(possible_type_list[i])
 
-    return decision_maker(best_choice_list)
-
-#recursively calls match_calculator until the best_choice_list has a length of 1, taking input from the user to narrow this list
-def decision_maker(best_choice_list):
-    if len(best_choice_list) == 1:
-        return best_choice_list[0]
+#recursively calls match_calculator() until the best_choice_list has a length of 1, taking input from the user to narrow this list
+def decision_maker(possible_type_list):
+    if len(possible_type_list) == 1:
+        return possible_type_list[0]
     else:
-        decision = questions(7, best_choice_list)
-        return match_calculator(decision, best_choice_list)
+        decision = questions(7, possible_type_list)
+        return match_calculator(decision, possible_type_list)
 
     
 #calls the helper functions and contains the core logic for when those various functions are called
 def main_loop():
     book_data_list = insert_book_data()
 
-    run_state = 0
+    run_val = 1
     user_reset_choice = "y"
 
     while user_reset_choice == "y":
-        if run_state == 0:
-            user_choice = questions(1)
-            match = match_calculator(user_choice)
-            while match == False:
-                user_choice = questions(3)
-                match = match_calculator(user_choice)
-            book_details(book_data_list, match)
 
-            user_reset_choice = questions(5)
+        user_choice = questions(run_val)
+        match = match_calculator(user_choice)
+        while match == False:
+            user_choice = questions(run_val + 2)
+            match = match_calculator(user_choice)
+        book_details(book_data_list, match)
+
+        user_reset_choice = questions(5)
+        while user_reset_choice != "y" and user_reset_choice != "n":
+            user_reset_choice = questions(6)
+        
+        if run_val != 2 and user_reset_choice == "y":
+            run_val = 2
+        else:
             while user_reset_choice != "y" and user_reset_choice != "n":
                 user_reset_choice = questions(6)
-            
-            if user_reset_choice == "y":
-                run_state = 1
-
-        #this is the run state where the user has asked to see more books. in this case, the dialogue is different to reflect that change
-        elif run_state == 1:
-            user_choice = questions(2)
-            match = match_calculator(user_choice)
-            while match == False:
-                user_choice = questions(4)
-                match = match_calculator(user_choice)
-            book_details(book_data_list, match)
-
-            user_reset_choice = questions(5)
-            while user_reset_choice != "y" and user_reset_choice != "n":
-                user_reset_choice = questions(6)
-
 
     print("\nI hope you found the book(s) you were looking for! Have a nice day!")
 
 
-
 def run_program():
-    #print_welcome()
+    #welcomes the user with some sick dragons, organized dynamically and printed side by side
+    dragon_printer(dragon_scary, dragon_aloofy, dragon_goofy)
 
     main_loop()
-        
-#additional stuff to add:
-"""
-make it so that the user can select a specific book, which should print out a sentence detailing it's name, author, critic and user reviews.
-you could make it so that searches are true searches with a conflict message asking the user to make a choice if two or more options match the multi-character prefix string the user gave.
-finish print_welcome, of course.
-fill out book_data
-"""
 
-#run_program()
+
+run_program()
+
+#some of the dragons might be messed up compared to their online versions
