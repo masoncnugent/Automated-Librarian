@@ -34,7 +34,7 @@ book_data = [["philosophical", "Beyond Good and Evil", "Fredrich Nietzsche", "18
              ["epic", "Paradise Lost", "John Milton", "1667", "5", "4"]]
 
 potential_types = [type[0] for type in book_data]
-types = []
+book_types = []
 for type in potential_types:
-    if type not in types:
-        types.append(type)
+    if type not in book_types:
+        book_types.append(type)
