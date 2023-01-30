@@ -1,3 +1,4 @@
+#All the data for the books as well as a book_types list which stores the name of every book genre in a list.
 book_data = [["philosophical", "Beyond Good and Evil", "Fredrich Nietzsche", "1886", "9", "6"],
              ["philosophical", "The Art of War", "Sun Tzu", "5th Century B.C.", "7", "8"],
              ["philosophical", "Republic", "Plato", "375 B.C.", "6", "4"],
