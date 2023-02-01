@@ -229,6 +229,7 @@ def creature_selector_loop():
     print("\n\n")
     return chosen_creature_list
 
+#Selects the creatures for the welcome screen based on random number generation instead of user input.
 def random_creature_selector():
     creatures_selected = 0
     chosen_creature_list = []
@@ -250,10 +251,8 @@ def run_program():
     #The important part here is that creature_printer() runs, NOT that the returned value is saved to be used for formatting the x_line surrounding the printed books.
     x_line_length = creature_printer(chosen_creature_list[0], chosen_creature_list[1], chosen_creature_list[2])
 
-    #In an ideal world, x_line_length would be reused to determine the length of the terminal window that the resulting program would run in, so everything formats perfectly
+    #In an ideal world, x_line_length would be reused to determine the length of the terminal window that the resulting program would run in, so everything formats perfectly.
     main_loop(x_line_length)
 
 
 run_program()
-
-#In addition to the randomness, see if you can figure out why gardevoir is messed up, and if any others are. Tyranitar is too. It's endemic. One easy way would be type out every braile unicode letter and see if they take up the same space. That would rule that out. ACTUALLY WAIT ITS LIKELY NON BRAILLE CHARACTERS MIXED WITH BRAILLE CHARACTERS.
